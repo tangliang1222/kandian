@@ -1,0 +1,284 @@
+
+
+<div class="lmgl">
+	<button class="btn btn-success" id="modaladd">新增</button>
+	<button class="btn btn-danger deletes">批量删除</button>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>编号</th>
+				<th>栏目名称</th>
+				<th>父栏目</th>
+				<th>描述</th>
+				<th>操作</th>
+			</th>
+		</thead>
+		<tbody id="tbody">
+			<tr class="hidden">
+				<td><input type='checkbox' class="myCheck"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><i class="iconfont icon-xiugai-copy update"></i>&nbsp;&nbsp;
+				<i class="iconfont icon-lajitongshanchu singleDelet"></i>
+				</td>		
+			</tr>
+		</tbody>
+	</table>
+
+	<!-- 模态框 -->
+	<div class="modal">
+		<div class="modal-dialog">
+		 	<div class="modal-content">
+				<div class="modal-header">
+					<!-- 增加一个叉，关闭模态框 -->
+					<span class="close" data-dismiss="modal">&times;</span>	
+ 					<!-- h4标签 -->
+					<h4 class="modal-title mytitle">添加栏目</h4>
+				</div>
+				<div class="modal-body">
+					<form action="#">
+						<span class="hiddenId"></span>
+						<span>栏目名称</span>
+						<input type="text" class="form-control lmmc">
+						<br>
+						<span>父栏目</span>
+						<select name="" id="flm" class="form-control">
+							<option value="">--请选择--</option>
+						</select>
+						<br>
+						<span>描述</span>
+						<textarea class="form-control des" rows="2"></textarea>
+					</form>	
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success myClose" id="queren">确认</button>
+					<button class="btn btn-danger myClose">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- js代码 -->
+<script type="text/javascript" >
+
+	$(function(){
+		// 获取所有数据
+		$.get("http://120.78.164.247:8099/manager/category/findAllCategory",function(results){
+			var lanmuarr=results.data;
+			// console.log(lanmuarr);
+			lanmuarr.forEach(function(item){
+				var cloneTr=$('.hidden').clone();
+				cloneTr.removeAttr('class');
+				// 设置每一个复制来的tr的具体内容
+				cloneTr.children(":first").children(":first").val(item.id);
+				$(cloneTr.children()[1]).text(item.name);
+				$(cloneTr.children()[3]).text(item.comment);
+				if (item.parent) {
+					$(cloneTr.children()[2]).text(item.parent.name);
+				} else{
+					$(cloneTr.children()[2]).text("无");
+				}
+				// 将所有tr给tbody
+				$('tbody').append(cloneTr);
+
+				//追加模态框中父栏目的option
+				var option="<option value='"+item.id+"'>"+item.name+"</option>";
+				$("#flm").append(option);
+
+			});//forEach遍历结束
+			
+			// 单个删除
+			$(".singleDelet").click(function(){
+				var del=confirm('确定是否删除此用户？');
+				if (del==true) {
+						alert("删除成功！")
+						// 获取input中的id值
+						var id = $(this).parent().parent().children(':first').children().val();
+						var obj={
+							id:Number(id)
+						}
+						// 发送请求删除
+						$.get("http://120.78.164.247:8099/manager/category/deleteCategoryById",obj,function(){
+							if(results.status==200){
+								$(".change").load("pages/lmgl.html");
+							}else{
+								alert("删除失败！");
+							}
+						});
+				}
+
+				
+			});
+
+
+
+			// 批量删除
+			$(".deletes").click(function(){
+
+			// 获取打勾的input的id
+			var ids=[];
+			$('.myCheck:checked').each(function(index,item){
+				var id = $(item).val();
+				ids.push(id);
+			});
+			// 判断是否为空 进行删除
+			if (ids.length) {
+				var obj={
+					ids:ids.toString()
+				}
+				// 提示
+				var del=confirm('确定是否删除此用户？');
+				if (del==true) {
+					alert("删除成功！")
+					$.post("http://120.78.164.247:8099/manager/category/batchDeleteCategory",obj,function(results){
+						if(results.status==200){
+							$(".change").load("pages/lmgl.html");
+						}
+					});
+				}
+
+
+				
+			}else{
+				alert("请选择想要删除的信息！");
+			}
+
+				
+
+
+
+				
+			});
+
+
+
+			// js控制模态框的显示
+			$("#modaladd").click(function(event) {
+				//修改模态框标题
+				$(".mytitle").text("添加栏目信息");
+				//模态框显示之前先清空表单内容
+				$(".lmmc").val("");
+				$(".des").val("");
+				$("#flm").val("");
+				$(".hiddenId").val("");
+				$(".modal").modal("show");
+			});
+
+			// js控制模态框的隐藏
+			$(".myClose").click(function(event) {
+				$(".modal").modal("hide");
+			});
+
+			// 当修改时，获取对应的值  修改笔
+			$(".update").click(function(){
+				$(".modal").modal("show");
+				//修改模态框标题
+				$(".mytitle").text("修改栏目信息");
+				var name=$(this).parent().parent().children()[1].innerHTML;
+				var des=$(this).parent().parent().children()[3].innerHTML;
+				var flm=$(this).parent().parent().children()[2].innerHTML;
+				// console.log(flm);
+				// 获取input中的id 来作为以后模态框新增和修改的判断
+				var hiddenId=$(this).parent().parent().children(":first").children().val();
+				// 没有父栏目时
+				if (flm=="无") {
+					$("#flm").val("");
+				} else{
+					var i_d=lanmuarr.filter(function(item){
+						return item.name==flm;
+					})[0].id;
+					$("#flm").val(i_d);	
+				}
+				// 设置
+				$(".lmmc").val(name);
+				$(".des").val(des);
+				$(".hiddenId").val(hiddenId);
+				
+			});
+
+			// 模态框的确认 新增按钮 修改按钮
+			$("#queren").click(function(){
+					var name=$(".lmmc").val();
+					var des=$(".des").val();
+					var flm=$("#flm").val();
+					var hiddenId=$(".hiddenId").val();
+					// 设置当没输入内容时不能加载的情况
+					var flag=true;
+					// 利用hiddenId的值进行判断是更新还是新增
+					if(hiddenId){
+						// 此时id存在，模态框进行修改
+						if (name && des) {
+							if(flm){
+								var obj={
+									id:hiddenId,
+									name:name,
+									comment:des,
+									parentId:flm,
+									no:1
+								}
+							}else{
+								var obj={
+									id:hiddenId,
+									name:name,
+									comment:des,
+									no:1
+								}
+							}
+						} else{
+							alert("请输入内容");
+							flag=false;
+						}
+					} else{
+						// 此时id不存在，模态框进行新增操作
+						// 判断name comment是否存在
+						if( name && des) {
+							// 判断parent是否存在
+							if (flm) {
+								var obj={
+									name:name,
+									comment:des,
+									parentId:flm,
+									no:1
+								}
+							} else{
+								var obj={
+									name:name,
+									comment:des,
+									no:1
+								}
+							}
+						} else{
+							alert("请输入内容！");
+							flag=false;
+						}
+					}
+					
+					if (flag) {
+						// 发送请求
+						$.post("http://120.78.164.247:8099/manager/category/saveOrUpdateCategory",obj,function(result){
+							// console.log(result);
+							// 添加成功
+							if (result.status==200) {
+								// 重新加载一次
+								$(".change").load("pages/lmgl.html");
+							}
+						});
+					}
+						
+			});
+						
+
+		});//查询结束
+
+
+
+
+
+	});	
+		
+	
+</script>
+	

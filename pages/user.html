@@ -1,0 +1,207 @@
+
+
+	<div class="user">
+		<div><button class="btn btn-success" id="useradd">新增</button>
+		<button class="btn btn-danger" disabled="">点击头像删除操作</button></div>
+		
+		<div class="hid hidd">
+			<div class="zhaopian"><img src="images/user.png" alt="图片正在加载中" ></div>
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td>用户名</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>真实姓名</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>手机号</td>
+						<td>18812344321</td>
+					</tr>
+					<tr>
+						<td>email</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>状态</td>
+						<td><input type="checkbox"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+
+		<div class="modal">
+			<div class="modal-dialog">
+			 	<div class="modal-content">
+					<div class="modal-header">
+						<!-- 增加一个叉，关闭模态框 -->
+						<span class="close" data-dismiss="modal">&times;</span>	
+	 					<!-- h4标签 -->
+						<h4 class="modal-title mytitle">添加用户</h4>
+					</div>
+					<div class="modal-body" >
+						<form action="#">
+							<span>用户名</span>
+							<input type="text"  class="form-control" id="username">
+							<br>
+							<span>密码</span>
+							<input type="text"  class="form-control" id="password">
+							<br>
+							<span>重复密码</span>
+							<input type="text"  class="form-control" id="oldpassword">
+							<br>
+							<span>真实姓名</span>
+							<input type="text"  class="form-control" id="nickname">
+							<br>
+							<span>email</span>
+							<input type="text"  class="form-control" id="email">
+							<br>
+						</form>	
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success myClose" id="queren">确认</button>
+						<button class="btn btn-danger myClose">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+
+
+
+	<!-- js代码 -->
+	<script type="text/javascript">
+		$(function(){
+			// 获取所有数据
+			$.get("http://120.78.164.247:8099/manager/user/findAllUser",function(results){
+				var getdata=results.data;
+				// console.log(getdata);
+				// id username password nickname enabled userface
+				getdata.forEach(function(item){
+					var cloneUser=$('.hid').clone(true);
+					cloneUser.removeClass('hid');
+					// 设置复制来的的每一个user
+					//cloneUser.children()[0]头像
+					// console.log(cloneUser.children().children().children().children());
+					// 用户名 真实姓名 email设置
+					cloneUser.children().children().children().children()[1].innerHTML=item.username;
+					cloneUser.children().children().children().children()[3].innerHTML=item.nickname;
+					cloneUser.children().children().children().children()[7].innerHTML=item.email;
+					cloneUser.children().children().children().children().children(":first").val(item.id);
+					var flag = item.enabled;
+					if (flag==true) {
+						cloneUser.children().children().children().children().children()[0].checked=true;
+					} 
+					// // 将所有tr给tbody
+					$('.user').append(cloneUser);
+				});//forEach结束
+
+				// 点击头像单个删除
+				$('.zhaopian').click(function(){
+					// 删除提示
+					var del=confirm('确定是否删除此用户？');
+					if (del==true) {
+						alert("删除成功！")
+						// 获取input中的id值
+						var id = $(this).parent().children().children().children().children().children(":first").val();
+						var obj={
+							id:Number(id)
+						}
+						// 发送请求删除
+						$.get("http://120.78.164.247:8099/manager/user/deleteUserById",obj,function(){
+							if(results.status==200){
+								$(".change").load("pages/user.html");
+							}else{
+								alert("删除失败！");
+							}
+						});
+					} 
+					
+				});
+
+				// js控制模态框显示
+				$("#useradd").click(function(event) {
+					$(".modal").modal("show");
+				});
+				// js控制模态框的关闭
+				$(".myClose").click(function(event) {
+					$(".modal").modal("hide");
+				});
+
+				// 模态框的确定按钮
+				$("#queren").click(function(){
+					var username=$("#username").val();
+					var password=$("#password").val();
+					var oldpassword=$("#oldpassword").val();
+					var nickname=$("#nickname").val();
+					var email=$("#email").val();
+					// 此时id不存在，模态框进行新增操作
+					// 判断name comment是否存在
+					if( username && password && nickname && email) {
+						// 判断密码和重复密码是否相等
+						if (password==oldpassword) {
+							var obj={
+								username:username,
+								password:password,
+								oldpassword:oldpassword,
+								nickname:nickname,
+								email:email
+							}
+							
+						} else{
+							alert("两次密码输入不一致！")
+						}
+						
+					} else{
+						alert("请输入内容！");
+					}
+					
+					// 点击确定 发送请求 
+					$.post("http://120.78.164.247:8099/manager/user/saveOrUpdateUser",obj,function(result){
+						// 添加成功
+						if (result.status==200) {
+							// 重新加载一次
+							$(".change").load("pages/user.html");
+							// console.log(obj);
+						}
+					});
+				});
+
+
+
+
+
+
+			});
+
+
+
+
+			
+			
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		});
+
+
+
+	</script>

@@ -1,0 +1,329 @@
+
+<div class="zxgl">
+	<button class="btn btn-success usersadd">新增</button>
+	<button class="btn btn-danger dels">批量删除</button>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>编号</th>
+				<th>文章标题</th>
+				<th>所属栏目</th>
+				<th>背景音乐</th>
+				<th>作者</th>
+				<th>发布时间</th>
+				<th>阅读次数</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="lmglhidden">
+				<td><input type="checkbox" class="myCheck"></input></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><i class="iconfont icon-xiugai-copy update" ></i>&nbsp;&nbsp;
+				<i class="iconfont icon-lajitongshanchu userDel"></i>
+				</td>
+			</tr>
+		</tbody>	
+	</table>
+	<!-- 模态框 -->
+	<div class="modal">
+		<div class="modal-dialog">
+		 	<div class="modal-content">
+				<div class="modal-header">
+					<!-- 增加一个叉，关闭模态框 -->
+					<span class="close" data-dismiss="modal">&times;</span>	
+ 					<!-- h4标签 -->
+					<h4 class="modal-title mytitle">添加栏目</h4>
+				</div>
+				<div class="modal-body">
+					<form action="#">
+						<span class="hiddenId"></span>
+						<span>文章标题</span>
+						<input type="text" class="form-control lmmc" id="title">
+						<br>
+						<span>列表样式</span>
+						<input type="text" class="form-control lmmc" id="listStyle">
+						<br>
+						<span>所属栏目</span>
+						<select name="" id="flm" class="form-control">
+							<option value="" id="opt">--请选择--</option>
+						</select>
+						<br>
+						<span>发布时间</span>
+						<input type="text" class="form-control lmmc" id="publishtime">
+						<br>
+						<span>背景音乐</span>
+						<input type="text" class="form-control lmmc" id="music">
+						<br>
+					</form>	
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success myClose" id="queren">确认</button>
+					<button class="btn btn-danger myClose">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- js代码 -->
+<script type="text/javascript" >
+	$(function(){
+		var form={
+			page:14,
+			pageSize:10
+		}
+		// 查询所有数据
+		$.get("http://120.78.164.247:8099/manager/article/findArticle",form,function(results){
+			var zxgldata=results.data.list;
+			// console.log(zxgldata);
+			// id title liststyle publishtime readtimes 背景音乐  作者 t 
+			zxgldata.forEach(function(item){
+				var cloneTr2=$('.lmglhidden').clone();
+				cloneTr2.removeAttr('class');
+				// 设置每一个复制来的tr的具体内容
+				var a=cloneTr2.children(":first").children(":first").val(item.id);
+				$(cloneTr2.children()[1]).text(item.title);
+				if (item.music) {
+					$(cloneTr2.children()[3]).text(item.music);
+				} else{
+					$(cloneTr2.children()[3]).text("无");
+				}
+				$(cloneTr2.children()[4]).text("常书欣");
+				$(cloneTr2.children()[5]).text(item.publishtime);
+				$(cloneTr2.children()[6]).text(item.readtimes);
+				// 所属栏目
+				if (item.category) {
+					$(cloneTr2.children()[2]).text(item.category.name);
+				} else{
+					$(cloneTr2.children()[2]).text("无");
+				}
+				//将所有tr给tbody
+				$('tbody').append(cloneTr2);
+				
+			});//zxgldataforEach遍历结束
+
+			// 请求父栏目数据
+			$.get("http://120.78.164.247:8099/manager/category/findAllCategory",function(results){
+					// 设置一个全局变量给父栏目option的匹配使用
+					lanmuarr=results.data;
+					lanmuarr.forEach(function(item){	
+						//追加模态框中父栏目的option
+						var option="<option value='"+item.id+"'>"+item.name+"</option>";
+						$("#flm").append(option);
+					});
+					
+			});
+
+
+
+			// 单个删除
+			$(".userDel").click(function(){
+				var del=confirm('确定是否删除此用户？');
+				if (del==true) {
+						alert("删除成功！")
+						// 获取input中的id值
+						var id = $(this).parent().parent().children(':first').children().val();
+						var obj={
+							id:Number(id)
+						}
+						// 发送请求删除
+						$.get("http://120.78.164.247:8099/manager/article/deleteArticleById",obj,function(){
+							if(results.status==200){
+								$(".change").load("pages/zxgl.html");
+							}else{
+								alert("删除失败！");
+							}
+						});
+				}	
+			});
+
+
+			// 批量删除
+			$(".dels").click(function(){
+				// 获取打勾的input的id
+				var ids=[];
+				$('.myCheck:checked').each(function(index,item){
+					var id = $(item).val();
+					ids.push(id);
+				});
+				// 判断是否为空 进行删除
+				if (ids.length) {
+					var obj={
+						ids:ids.toString()
+					}
+					// 提示
+					var del=confirm('确定是否删除此用户？');
+					if (del==true) {
+						alert("删除成功！")
+						$.post("http://120.78.164.247:8099/manager/article/batchDeleteArticle",obj,function(results){
+							if(results.status==200){
+								$(".change").load("pages/zxgl.html");
+							}
+						});
+					}
+				}else{
+					alert("请选择想要删除的信息！");
+				}	
+			});
+
+			
+
+			
+			// js控制模态框的显示
+			$(".usersadd").click(function(event) {
+				//修改模态框标题
+				$(".mytitle").text("添加咨询信息");
+				//模态框显示之前先清空表单内容
+				$(".lmmc").val("");
+				$("#flm").val("");
+				$(".hiddenId").val("");
+				$(".modal").modal("show");
+			});
+
+			// js控制模态框的隐藏
+			$(".myClose").click(function(event) {
+				$(".modal").modal("hide");
+			});
+
+			// 当修改时，获取对应的值  修改笔
+			$(".update").click(function(){
+				$(".modal").modal("show");
+				//修改模态框标题
+				$(".mytitle").text("修改咨询信息");
+				var title=$(this).parent().parent().children()[1].innerHTML;
+				// 获取liststyle
+				var getId = $(this).parent().parent().children(':first').children().val();
+				var liststyle=zxgldata.filter(function(item){
+						return item.id==getId;
+					})[0].liststyle;
+				var music=$(this).parent().parent().children()[3].innerHTML;
+				var publishtime=$(this).parent().parent().children()[5].innerHTML;
+				var flm=$(this).parent().parent().children()[2].innerHTML;
+				// 获取input中的id 来作为以后模态框新增和修改的判断
+				var hiddenId=$(this).parent().parent().children(":first").children().val();
+				// 设置
+				$("#title").val(title);
+				$("#music").val(music);
+				$("#publishtime").val(publishtime);
+				$(".hiddenId").val(hiddenId);
+				$("#listStyle").val(liststyle);
+				// 用获取的父栏目来设置
+				if (flm=="无") {
+					$("#flm").val("");
+				} else{
+					var newzxgldata=lanmuarr.filter(function(item){
+						return item.name==flm;
+					})[0];
+					var i_d=newzxgldata.id;
+					$("#flm").val(i_d);	
+				}
+			});
+
+			// 新增数据
+			$("#queren").click(function(){
+					var title=$("#title").val();
+					var liststyle=$("#listStyle").val();
+					var flm=$("#flm").val();
+					var publishtime=$("#publishtime").val();
+					var music=$("#music").val();
+					var hiddenId=$(".hiddenId").val();
+					var flag=true;
+					// 利用hiddenId的值进行判断是更新还是新增
+					if(hiddenId){
+						// 此时id存在，模态框进行修改
+						if (title && liststyle) {
+							if(flm){
+								var obj={
+									id:hiddenId,
+									title:title,
+									liststyle:liststyle,
+									publishtime:publishtime,
+									music:music,
+									readtimes:0,
+									categoryId:flm
+								}
+						//id title liststyle publishtime readtimes 背景音乐  作者 t 
+							}else{
+								var obj={
+									title:title,
+									id:hiddenId,
+									liststyle:liststyle,
+									publishtime:publishtime,
+									music:music,
+									readtimes:0
+								}
+							}
+						} else{
+							alert("请输入内容");
+							flag=false;
+						}
+					} else{
+						// 此时id不存在，模态框进行新增操作
+						// 判断name comment是否存在
+						if( title && liststyle) {
+							if (flm) {
+								var obj={
+									title:title,
+									liststyle:liststyle,
+									publishtime:publishtime,
+									music:music,
+									readtimes:0,
+									categoryId:flm
+								}
+							} else{
+								var obj={
+									title:title,
+									liststyle:liststyle,
+									publishtime:publishtime,
+									music:music,
+									readtimes:0
+								}
+							}
+						} else{
+							alert("请输入内容！");
+							flag=false;
+						}
+					}
+					if (flag) {
+						// 发送请求
+						$.post("http://120.78.164.247:8099/manager/article/saveOrUpdateArticle",obj,function(result){
+							// 添加成功
+							console.log(obj);
+							if (result.status==200) {
+								// 重新加载一次
+								$(".change").load("pages/zxgl.html");
+							}
+						});
+					}
+						
+			});
+
+		});
+		
+		
+		
+		// 编辑数据
+		
+
+
+
+
+
+
+
+
+
+
+
+
+	});
+
+
+</script>

@@ -1,0 +1,355 @@
+
+
+
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	/*首页*/
+	/*最外层*/
+	.content{
+		width: 1200px;
+		margin: 0 auto;
+		overflow: hidden;
+		border: 1px solid #CCCCCC;
+		box-sizing: content-box;
+	}
+	/*左边*/
+	.leftCon{
+		float: left;
+		background-color: #282830;
+	}
+	.leftCon .lTop{
+		width: 250px;
+		background-color: #3D556D;
+		cursor: pointer;
+	}
+	/*logo*/
+	.leftCon .lTop img{
+		height: 45px;
+		margin-left: 20px;
+		margin-top: 5px;
+		float: left;
+	}
+	.leftCon .lTop span{
+		font-size: 18px;
+		color: white;
+		height: 50px;
+		line-height: 50px;
+		margin-left: 15px;
+	}
+	/*ul导航条*/
+	.leftCon .lBottom{
+		width: 250px;
+		height: 900px;
+	}
+
+	.leftCon .lBottom ul{
+		margin-top: 50px;
+	}
+	.leftCon .lBottom ul li{
+		height: 50px;
+		list-style: none;
+		color: white;
+		border-bottom: 1px solid #333333;
+		line-height: 50px;
+		cursor: pointer;
+	}
+	.leftCon .lBottom ul li .icon-shouye{
+		margin-left: 25px;
+	}
+	.leftCon .lBottom ul li .icon-liebiao{
+		margin-left: 25px;
+	}
+	.leftCon .lBottom ul li .icon-zixun{
+		margin-left: 25px;
+	}
+	.leftCon .lBottom ul li .icon-ai-user{
+		margin-left: 25px;
+	}
+	.leftCon .lBottom ul li .icon-dayuhao{
+		margin-right: 25px;
+		float: right;
+	}
+
+	/*右边*/
+	.rightCon{
+		float: left;
+	}
+	.rightCon .rTop{
+		width: 950px;
+		height: 50px;
+	}
+	.rightCon .rTop .span1{
+		height: 30px;
+		display: inline-block;
+		margin-top: 10px;
+		margin-left: 20px;
+		position: relative;
+	}
+	.rightCon .rTop .span1 .span2{
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		display: inline-block;
+		background-color: red;
+		position: absolute;
+		right: 0;
+		top: 0;
+		text-align: center;
+		color: white;
+		line-height: 14px;
+	}
+	.rightCon .rTop .icon-liebiao1{
+		font-size: 25px;
+	}
+	.rightCon .rTop .icon-laba{
+		margin-left: 40px;
+		font-size: 25px;
+	}
+	.rightCon .rTop .user1{
+		float: right;
+		margin-right: 60px;
+	}
+	.rightCon .rTop .user1 img{
+		margin: 5px 10px 5px 0;
+		height: 40px;
+		border-radius: 50%;
+	}
+	.rightCon .rTop .user1 span,.rightCon .rTop .user1 i{
+		font-size: 12px;
+	}
+
+
+
+
+
+
+
+	/*主体内容*/
+	/*首页部分*/
+	.rightCon .rBottom{
+		width: 950px;
+		height: 950px;
+		background-color: #F0F0F0;
+		overflow: hidden;
+	}
+	.rightCon .rBottom .change{
+		margin: 30px;
+		overflow: hidden;
+		background-color: white;
+		/*margin-top: 0;*/
+	}
+	.rightCon .rBottom img{
+		width: 100%;
+		height: 100%;
+	}
+	/*首页ul-a*/
+	.rightCon .rBottom .ul-a{
+		float: left;
+	}
+	.rightCon .rBottom .ul-a ul li{
+		list-style: none;
+		width: 200px;
+		height: 70px;
+		background-color: white;
+		margin-top: 30px;
+	}
+	.rightCon .rBottom .ul-a ul li:first-child{
+		margin-top: 0;
+	}
+	/*首页ul-b*/
+	.rightCon .rBottom .ul-b{
+		width: 400px;
+		height: 270px;
+		background-color: #fff;
+		float: left;
+		margin-left: 50px;
+	}
+	/*首页ul-c*/
+	.rightCon .rBottom .ul-c{
+		margin-left: 40px;
+		float: left;
+	}
+	.rightCon .rBottom .ul-c ul li{
+		list-style: none;
+		width: 200px;
+		height: 120px;
+		background-color: white;
+	}
+	.rightCon .rBottom .ul-c ul li:nth-child(2){
+		margin-top: 30px;
+	}
+	/*首页ul-d*/
+	.rightCon .rBottom .ul-d ul{
+		background-color: red;
+	}
+	.rightCon .rBottom .ul-d ul li{
+		list-style: none;
+		float: left;
+		width: 430px;
+		margin-top: 30px;
+		background-color: white;
+	}
+	.rightCon .rBottom .ul-d ul #bingtu{
+		height: 500px;
+	}
+	.rightCon .rBottom .ul-d ul #zhutu{
+		height: 300px;
+		margin-left: 30px;
+	}
+	.rightCon .rBottom .ul-d ul li:last-child{
+		height:170px;
+		margin-left: 30px; 
+	}
+
+
+
+
+
+	/*栏目管理部分*/
+	.rightCon .rBottom .change .lmgl{
+		background-color: white;
+		height: 950px;
+	}
+	.rightCon .rBottom .change .lmgl button{
+		margin-left: 20px;
+		margin-top: 20px;
+	}
+	.rightCon .rBottom .change .lmgl table{
+		width: 850px;
+		margin-left: 20px;
+		margin-top: 20px;
+		margin-right: 20px;
+	}
+	.rightCon .rBottom .change .lmgl table th{
+		text-align: center;
+	}
+	.rightCon .rBottom .change .lmgl table tr{
+		height: 30px;
+		text-align: center;
+	}
+	.rightCon .rBottom .change .lmgl table th:nth-child(1){
+		width: 70px;
+	}
+	.rightCon .rBottom .change .lmgl table th:nth-child(2){
+		width: 150px;
+	}
+	.rightCon .rBottom .change .lmgl table th:nth-child(3){
+		width: 150px;
+	}
+	.rightCon .rBottom .change .lmgl table th:nth-child(5){
+		width: 120px;
+	}
+	.rightCon .rBottom .change .lmgl table .hidden{
+		display: none;
+	}
+	.rightCon .rBottom .change .lmgl i{
+		cursor: pointer;
+	}
+	
+
+
+
+
+
+
+
+
+	/*咨询管理*/
+	.rightCon .rBottom .change .zxgl{
+		background-color: white;
+		height: 950px;
+	}
+	.rightCon .rBottom .change .zxgl button{
+		margin-left: 20px;
+		margin-top: 20px;
+	}
+	.rightCon .rBottom .change .zxgl table{
+		width: 850px;
+		margin-left: 20px;
+		margin-top: 20px;
+		margin-right: 20px;
+	}
+	.rightCon .rBottom .change .zxgl table th{
+		text-align: center;
+	}
+	.rightCon .rBottom .change .zxgl table tr{
+		height: 30px;
+		text-align: center;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(1){
+		width: 50px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(2){
+		width: 150px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(3){
+		width: 100px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(4){
+		width: 100px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(5){
+		width: 90px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(6){
+		width: 155px;
+	}
+	.rightCon .rBottom .change .zxgl table td:nth-child(8){
+		width: 100px;
+	}
+	.rightCon .rBottom .change .zxgl table .lmglhidden{
+		display: none;
+	}
+	.rightCon .rBottom .change .zxgl i{
+		cursor: pointer;
+	}
+
+
+
+
+	/*用户管理*/
+	.rightCon .rBottom .change .user{
+		overflow: auto;
+		background-color: white;
+		height: 950px;
+	}
+	.rightCon .rBottom .change .user button{
+		margin-left: 30px;
+		margin-top: 20px;
+	}
+	.rightCon .rBottom .change .user .hid{
+		display: none;
+	}
+	.rightCon .rBottom .change .user .hidd{
+		margin-top: 30px;
+		margin-left: 30px;
+		width: 250px;
+		height: 330px;
+		border: 1px solid #cccccc;
+		text-align: center;
+		float: left;
+	}
+	.rightCon .rBottom .change .user .hidd .zhaopian{
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		margin: 20px auto;
+		cursor: pointer;												
+	}
+	.rightCon .rBottom .change .user .hidd img{
+		width: 100%;
+		height: 100%;
+		
+	}
+	.rightCon .rBottom .change .user .hidd table td{
+		height: 30px;
+		text-align: center;
+		font-size: 12px;
+	}
+	.rightCon .rBottom .change .user .modal form{
+		width: 300px;
+		margin: 0 auto;
+		font-size: 14px;
+	}
